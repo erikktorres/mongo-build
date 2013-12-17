@@ -19,9 +19,9 @@ sleep 2
 DEPENDENCIES=("scons" "libssl-dev");
 UNINSTALLED_DEPS=(""); #Put an empty value in the array to initialize
 
-for dep in ${DEPENDENCIES};
+for dep in ${DEPENDENCIES[@]};
 do
-  echo "Checking for dep[%{dep}]"
+  echo "Checking for dep[${dep}]"
   if [ -z "`aptitude search ${dep} | grep \"i \+${dep} \"`" ];
   then
     echo "${dep} not installed"
