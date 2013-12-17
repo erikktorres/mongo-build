@@ -23,6 +23,7 @@ for dep in ${DEPENDENCIES};
 do
   if [ -z "`aptitude search ${dep} | grep \"i \+${dep} \"`" ];
   then
+    echo "${dep} not installed"
     UNINSTALLED_DEPS=("${UNINSTALLED_DEPS[@]}" ${dep});
   fi
 done;
