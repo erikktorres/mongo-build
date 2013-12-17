@@ -33,10 +33,8 @@ fi
 git checkout -q tags/${MONGO_VERSION}
 
 sed -i 's/"-Werror", //' SConstruct
-sed -i 's/"-Werror"//' src/third_party/v8/SConstruct
+sed -i 's/"-Werror"//' src/third_party/v8/SConscript
 
 scons -j ${NUM_CPUS} --64 --ssl --prefix ${DIR} install
 cd ${DIR}
 rm -rf ${TARGET_DIR}
-
-cd ${CURR_DIR}
