@@ -16,6 +16,24 @@ echo "Repo:    ${MONGO_REPO}"
 echo "CPUs:    ${NUM_CPUS}"
 sleep 2
 
+DEPENDENCIES=("scons");
+UNINSTALLED_DEPS=();
+
+for dep in ${DEPENDENCIES};
+do
+  if [ -z "${aptitude search ${dep} | grep \"i \+${dep} \"}" ];
+  then
+    UNINSTALLED_DEPS=("${UNINSTALLED_DEPS[@]}" ${dep});
+  fi
+done;
+
+if [ ${#UNINSTALLED_DEPS} != 0 ]
+then
+  echo "Some build dependencies are not installed, please run:"
+  echo "sudo aptitude install ${UNINSTALLED_DEPS[@]}"
+  exit 2;
+fi
+
 if [ -e ${TARGET_DIR} ];
 then
   echo "Target dir[${TARGET_DIR}] exists, removing."
@@ -32,6 +50,8 @@ then
 fi
 git checkout -q tags/${MONGO_VERSION}
 
+# Remove "-Werror" command-line arguments for compilation.  These set warnings
+# to be errors and cause failures when compiling boost and v8
 sed -i 's/"-Werror", //' SConstruct
 sed -i 's/"-Werror"//' src/third_party/v8/SConscript
 
