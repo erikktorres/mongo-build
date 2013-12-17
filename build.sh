@@ -21,7 +21,7 @@ UNINSTALLED_DEPS=();
 
 for dep in ${DEPENDENCIES};
 do
-  if [ -z "${aptitude search ${dep} | grep \"i \+${dep} \"}" ];
+  if [ -z "`aptitude search ${dep} | grep \"i \+${dep} \"`" ];
   then
     UNINSTALLED_DEPS=("${UNINSTALLED_DEPS[@]}" ${dep});
   fi
