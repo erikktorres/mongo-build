@@ -3,6 +3,7 @@
 CURR_DIR=`pwd`
 DIR=`dirname $0`
 cd ${DIR}
+DIR=`pwd`
 
 MONGO_VERSION=r2.4.8
 MONGO_REPO=https://github.com/mongodb/mongo.git
@@ -56,6 +57,8 @@ git checkout -q tags/${MONGO_VERSION}
 sed -i 's/"-Werror", //' SConstruct
 sed -i "s/'-Werror',//" src/third_party/v8/SConscript
 
-scons -j ${NUM_CPUS} --64 --ssl --prefix ${DIR} all
+# For whatever reason, the prefix dir must be a sub-directory of the checkout...
+scons -j ${NUM_CPUS} --64 --ssl --prefix "${CHECKOUT_DIR}/target" install
+mv target/bin ${DIR}/
 cd ${DIR}
 rm -rf ${TARGET_DIR}
