@@ -16,7 +16,7 @@ echo "Repo:    ${MONGO_REPO}"
 echo "CPUs:    ${NUM_CPUS}"
 sleep 2
 
-DEPENDENCIES=("scons");
+DEPENDENCIES=("scons" "libssl-dev");
 UNINSTALLED_DEPS=(""); #Put an empty value in the array to initialize
 
 for dep in ${DEPENDENCIES};
