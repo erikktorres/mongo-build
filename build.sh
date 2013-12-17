@@ -21,7 +21,6 @@ UNINSTALLED_DEPS=(""); #Put an empty value in the array to initialize
 
 for dep in "${DEPENDENCIES[@]}";
 do
-  echo "Checking for dep[${dep}]"
   if [ -z "`aptitude search ${dep} | grep \"i \+${dep} \"`" ];
   then
     echo "${dep} not installed"
@@ -54,8 +53,7 @@ git checkout -q tags/${MONGO_VERSION}
 
 # Remove "-Werror" command-line arguments for compilation.  These set warnings
 # to be errors and cause failures when compiling boost and v8
-sed -i 's/"-Werror", //' SConstruct
-sed -i 's/"-Werror"//' src/third_party/v8/SConscript
+sed -i 's/"-Werror", //' SConstruct src/third_party/v8/SConscript
 
 scons -j ${NUM_CPUS} --64 --ssl --prefix ${DIR} install
 cd ${DIR}
