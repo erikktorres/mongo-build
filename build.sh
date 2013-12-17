@@ -4,7 +4,7 @@ CURR_DIR=`pwd`
 DIR=`dirname $0`
 cd ${DIR}
 
-MONGO_VERSION=r2.8.4
+MONGO_VERSION=r2.4.8
 MONGO_REPO=https://github.com/mongodb/mongo.git
 NUM_CPUS=`cat /proc/cpuinfo | grep processor | wc -l`
 TARGET_DIR=${DIR}/target
@@ -15,6 +15,12 @@ echo "Version: ${MONGO_VERSION}"
 echo "Repo:    ${MONGO_REPO}"
 echo "CPUs:    ${NUM_CPUS}"
 sleep 2
+
+if [ -e ${TARGET_DIR} ];
+then
+  echo "Target dir[${TARGET_DIR}] exists, removing."
+  rm -rf ${TARGET_DIR}
+fi
 
 git clone ${MONGO_REPO} ${CHECKOUT_DIR}
 cd ${CHECKOUT_DIR}
