@@ -14,9 +14,9 @@ echo "Building Mongo:"
 echo "Version: ${MONGO_VERSION}"
 echo "Repo:    ${MONGO_REPO}"
 echo "CPUs:    ${NUM_CPUS}"
-sleep 1
+sleep 2
 
-git clone -q ${MONGO_REPO} ${CHECKOUT_DIR}
+git clone ${MONGO_REPO} ${CHECKOUT_DIR}
 cd ${CHECKOUT_DIR}
 
 if [ -z "`git tag | grep ${MONGO_VERSION}`" ];
