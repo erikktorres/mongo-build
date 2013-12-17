@@ -16,7 +16,7 @@ echo "Repo:    ${MONGO_REPO}"
 echo "CPUs:    ${NUM_CPUS}"
 sleep 1
 
-git -q clone ${MONGO_REPO} ${CHECKOUT_DIR}
+git clone -q ${MONGO_REPO} ${CHECKOUT_DIR}
 cd ${CHECKOUT_DIR}
 
 if [ -z "`git tag | grep ${MONGO_VERSION}`" ];
@@ -24,7 +24,7 @@ then
   echo "Unknown mongo version[${MONGO_VERSION}]";
   exit 1;
 fi
-git -q checkout tags/${MONGO_VERSION}
+git checkout -q tags/${MONGO_VERSION}
 
 sed -i 's/"-Werror", //' SConstruct
 sed -i 's/"-Werror"//' src/third_party/v8/SConstruct
