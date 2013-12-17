@@ -21,6 +21,7 @@ UNINSTALLED_DEPS=(""); #Put an empty value in the array to initialize
 
 for dep in ${DEPENDENCIES};
 do
+  echo "Checking for dep[%{dep}]"
   if [ -z "`aptitude search ${dep} | grep \"i \+${dep} \"`" ];
   then
     echo "${dep} not installed"
@@ -30,7 +31,7 @@ done;
 
 if [ ${#UNINSTALLED_DEPS[@]} -gt 1 ] # The empty value doesn't count
 then
-  echo "Some[${#UNINSTALLED_DEPS[@]}] build dependencies are not installed, please run:"
+  echo "Some[`expr ${#UNINSTALLED_DEPS[@]} - 1`] build dependencies are not installed, please run:"
   echo "sudo aptitude install ${UNINSTALLED_DEPS[@]}"
   exit 2;
 fi
