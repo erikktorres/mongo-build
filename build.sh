@@ -17,7 +17,7 @@ echo "CPUs:    ${NUM_CPUS}"
 sleep 2
 
 DEPENDENCIES=("scons");
-UNINSTALLED_DEPS=();
+UNINSTALLED_DEPS=("");
 
 for dep in ${DEPENDENCIES};
 do
@@ -27,7 +27,7 @@ do
   fi
 done;
 
-if [ ${#UNINSTALLED_DEPS} != 0 ]
+if [ ${#UNINSTALLED_DEPS[@]} != 0 ]
 then
   echo "Some build dependencies are not installed, please run:"
   echo "sudo aptitude install ${UNINSTALLED_DEPS[@]}"
