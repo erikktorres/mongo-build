@@ -9,7 +9,7 @@ describe('mongoBackup.js', function(){
   var mongoClient = mockableObject.make('connect', 'dump');
   var pusher = mockableObject.make('push');
   var fileUtils = mockableObject.make('buildTar', 'deleteDir');
-  var polling = mockableObject.make('repeat');
+  var polling = mockableObject.make('repeatAfterDelay');
   var config = makeConfig({
     storage: 'testDir',
     period: 'minute',
@@ -24,14 +24,14 @@ describe('mongoBackup.js', function(){
   it('passes a sanity check', function(){
     var backup = require('../lib/mongoBackup.js')(mongoClient, pusher, fileUtils, polling, config);
 
-    sinon.stub(polling, 'repeat');
-    backup.start();
+    sinon.stub(polling, 'repeatAfterDelay');
+    backup.start(function(){});
 
-    expect(polling.repeat).have.been.calledOnce;
-    expect(polling.repeat).have.been.calledWith('mongo-backup', sinon.match.func, sinon.match.func);
+    expect(polling.repeatAfterDelay).have.been.calledOnce;
+    expect(polling.repeatAfterDelay).have.been.calledWith('mongo-backup', sinon.match.func, sinon.match.func);
 
-    var backupFn = polling.repeat.getCall(0).args[1];
-    var timingFn = polling.repeat.getCall(0).args[2];
+    var backupFn = polling.repeatAfterDelay.getCall(0).args[1];
+    var timingFn = polling.repeatAfterDelay.getCall(0).args[2];
 
     var now = require('moment')();
     var valOfNow = now.valueOf();

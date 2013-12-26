@@ -30,6 +30,7 @@ var log = require('./lib/log.js')('watcher.js');
   process.on('SIGINT', process.emit.bind(process, 'SIGTERM'));
   process.on('SIGHUP', process.emit.bind(process, 'SIGTERM'));
   process.on('SIGTERM', function(){
+    log.info('Shutting down.');
     async.series([
       mongoBackup.stop.bind(mongoBackup),
       mongoRunner.stop.bind(mongoRunner)
