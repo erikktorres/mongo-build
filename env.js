@@ -20,7 +20,7 @@ module.exports = (function(){
   env.backup.storage = fn.returns(process.env.BACKUP_STORAGE || null);
 
   // Extra command-line arguments for mongodump
-  env.backup.mongodumpCmdArgs = fn.returns(process.env.BACKUP_MONGODUMP_CMD_ARGS || "");
+  env.backup.mongodumpCmdArgs = fn.returns(JSON.parse(process.env.BACKUP_MONGODUMP_CMD_ARGS || "[]"));
 
   /*
    Configuration of pusher, s3pusher is only currently known pusher.
