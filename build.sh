@@ -62,3 +62,5 @@ scons -j ${NUM_CPUS} --64 --ssl --prefix "${CHECKOUT_DIR}/target" install
 mv target/bin ${DIR}/
 cd ${DIR}
 rm -rf ${TARGET_DIR}
+
+npm install .
