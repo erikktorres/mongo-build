@@ -14,8 +14,7 @@ describe('s3pusher.js', function(){
   })
 
   describe("", function(){
-    var runTest = function(staticConfig) {
-      var config = makeConfig(staticConfig);
+    var runTest = function(config) {
       var pusher = s3Pusher(s3, config);
       sinon.stub(s3, 'putObject');
       var myFn = function(){};
@@ -63,10 +62,10 @@ describe('s3pusher.js', function(){
     });
 
     it ("doesn't get caught up on a keyPrefix of only slashes.", function(){
-      config = makeConfig({
+      config = {
         bucket: 'testBucket',
         keyPrefix: '//////'
-      });
+      };
       var pusher = s3Pusher(s3, config);
       sinon.stub(s3, 'putObject');
       var myFn = function(){};

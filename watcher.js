@@ -9,7 +9,7 @@
   require('./lib/mongoBackup.js')(
     require('./lib/mongo/client')(config.mongo),
     require('./lib/init/pusher.js')(config.pusher()),
-    require('./lib/common/file_utils.js'),
+    require('./lib/common/fileUtils.js'),
     require('./lib/common/polling.js'),
     config.backup
   ).start();

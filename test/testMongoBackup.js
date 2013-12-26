@@ -8,7 +8,7 @@ var makeConfig = fixture.makeConfig;
 describe('mongoBackup.js', function(){
   var mongoClient = mockableObject.make('connect', 'dump');
   var pusher = mockableObject.make('push');
-  var file_utils = mockableObject.make('buildTar', 'deleteDir');
+  var fileUtils = mockableObject.make('buildTar', 'deleteDir');
   var polling = mockableObject.make('repeat');
   var config = makeConfig({
     storage: 'testDir',
@@ -18,11 +18,11 @@ describe('mongoBackup.js', function(){
   });
 
   beforeEach(function(){
-    mockableObject.reset(mongoClient, pusher, file_utils, polling);
+    mockableObject.reset(mongoClient, pusher, fileUtils, polling);
   });
 
   it('passes a sanity check', function(){
-    var backup = require('../lib/mongoBackup.js')(mongoClient, pusher, file_utils, polling, config);
+    var backup = require('../lib/mongoBackup.js')(mongoClient, pusher, fileUtils, polling, config);
 
     sinon.stub(polling, 'repeat');
     backup.start();
@@ -41,15 +41,15 @@ describe('mongoBackup.js', function(){
 
     mockableObject.reset(polling);
     sinon.stub(mongoClient, 'dump').withArgs('--ssl', 'testDir', sinon.match.func).callsArg(2);
-    sinon.stub(file_utils, 'buildTar').withArgs('testDir', 'testDir/mongo-backup.tar.gz', sinon.match.func).callsArg(2);
+    sinon.stub(fileUtils, 'buildTar').withArgs('testDir', 'testDir/mongo-backup.tar.gz', sinon.match.func).callsArg(2);
     sinon.stub(pusher, 'push').withArgs('testDir/mongo-backup.tar.gz').callsArg(1);
-    sinon.stub(file_utils, 'deleteDir').withArgs('testDir');
+    sinon.stub(fileUtils, 'deleteDir').withArgs('testDir');
     backupFn(function(err){
       expect(err).is.empty;
       expect(mongoClient.dump).have.been.calledOnce;
-      expect(file_utils.buildTar).have.been.calledOnce;
+      expect(fileUtils.buildTar).have.been.calledOnce;
       expect(pusher.push).have.been.calledOnce;
-      expect(file_utils.deleteDir).have.been.calledOnce;
+      expect(fileUtils.deleteDir).have.been.calledOnce;
     });
   });
 });
