@@ -13,14 +13,15 @@ describe('mongoBackup.js', function(){
   var config = makeConfig({
     storage: 'testDir',
     period: 'minute',
-    mongodumpCmdArgs: '--ssl'
+    mongodumpCmdArgs: '--ssl',
+    id: 'yay'
   });
 
   beforeEach(function(){
     mockableObject.reset(mongoClient, pusher, fileUtils, polling);
   });
 
-  it('passes a sanity check', function(){
+  it('passes a sanity check', function(done){
     var backup = require('../lib/mongoBackup.js')(mongoClient, pusher, fileUtils, polling, config);
 
     sinon.stub(polling, 'repeatAfterDelay');
@@ -43,12 +44,24 @@ describe('mongoBackup.js', function(){
     sinon.stub(fileUtils, 'buildTar').withArgs('testDir', 'testDir/mongo-backup.tar.gz', sinon.match.func).callsArg(2);
     sinon.stub(pusher, 'push').withArgs('testDir/mongo-backup.tar.gz').callsArg(1);
     sinon.stub(fileUtils, 'deleteDir').withArgs('testDir');
+
+    // Mock the mongo db
+    var db = mockableObject.make('collection', 'close');
+    sinon.stub(db, 'collection').withArgs('_backups').returns({
+      insert: function(val, cb){ expect(val.who).equals('yay'); cb(null);}
+    });
+    sinon.stub(db, 'close');
+    sinon.stub(mongoClient, 'connect').withArgs(sinon.match.func).callsArgWith(0, null, db);
+
     backupFn(function(err){
       expect(err).to.not.exist;
       expect(mongoClient.dump).have.been.calledOnce;
+      expect(mongoClient.connect).have.been.calledOnce;
       expect(fileUtils.buildTar).have.been.calledOnce;
       expect(pusher.push).have.been.calledOnce;
       expect(fileUtils.deleteDir).have.been.calledOnce;
+      expect(db.close).have.been.calledOnce;
+      done();
     });
   });
 });

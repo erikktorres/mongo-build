@@ -36,6 +36,9 @@ module.exports = (function(){
   // Extra command-line arguments for mongodump
   env.backup.mongodumpCmdArgs = fn.returns(JSON.parse(process.env.BACKUP_MONGODUMP_CMD_ARGS || "[]"));
 
+  // An id for this node.  Stored along with metadata about the backup in the mongo db.
+  env.backup.id = fn.returns(process.env.BACKUP_ID || 'some_node');
+
   /*
    Configuration of pusher, s3pusher is only currently known pusher.
 
