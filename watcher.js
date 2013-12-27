@@ -27,6 +27,7 @@ var log = require('./lib/log.js')('watcher.js');
     }
   });
 
+  process.on('uncaughtException', process.emit.bind(process, 'SIGTERM'));
   process.on('SIGINT', process.emit.bind(process, 'SIGTERM'));
   process.on('SIGHUP', process.emit.bind(process, 'SIGTERM'));
   process.on('SIGTERM', function(){
