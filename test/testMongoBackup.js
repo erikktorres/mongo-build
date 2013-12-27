@@ -13,7 +13,6 @@ describe('mongoBackup.js', function(){
   var config = makeConfig({
     storage: 'testDir',
     period: 'minute',
-    replSet: false,
     mongodumpCmdArgs: '--ssl'
   });
 
@@ -45,7 +44,7 @@ describe('mongoBackup.js', function(){
     sinon.stub(pusher, 'push').withArgs('testDir/mongo-backup.tar.gz').callsArg(1);
     sinon.stub(fileUtils, 'deleteDir').withArgs('testDir');
     backupFn(function(err){
-      expect(err).is.empty;
+      expect(err).to.not.exist;
       expect(mongoClient.dump).have.been.calledOnce;
       expect(fileUtils.buildTar).have.been.calledOnce;
       expect(pusher.push).have.been.calledOnce;

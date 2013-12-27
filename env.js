@@ -1,5 +1,7 @@
+var fs = require('fs');
 var util = require('util');
 
+var except = require('./lib/common/except.js');
 var fn = require('./lib/common/fn.js');
 var pre = require('./lib/common/pre.js');
 
@@ -8,20 +10,18 @@ module.exports = (function(){
 
   env.mongo = {};
 
-  // dbpath property to pass to Mongo
-  env.mongo.dbPath = fn.returns(process.env.MONGO_DB_PATH || null);
-
   // Location of config file for various mongo config settings
-  env.mongo.configFile = fn.returns(process.env.MONGO_CONFIG_FILE || 'config/config.conf');
-
-  // The replication set name if this is a replication set
-  env.mongo.replSet = fn.returns(process.env.MONGO_REPLICATION_SET || null);
+  env.mongo.config = fn.returns(JSON.parse(process.env.MONGO_CONFIG || '{}'));
 
   // Connection string to connect to the local mongo.
   // This should rarely need to be set, as it should build it automatically.
-  var localString = 'mongodb://localhost:27017/?ssl=true';
-  if (env.mongo.replSet() != null) {
+  var mongoConfig = env.mongo.config();
+  var localString = 'mongodb://localhost:27017/?';
+  if (mongoConfig.replSet != null) {
     localString = util.format('%s&replSet=%s', localString, env.mongo.replSet());
+  }
+  if (mongoConfig.ssl != null) {
+    localString = util.format('%s&ssl=%s', localString, env.mongo.replSet());
   }
   env.mongo.connectionString = fn.returns(process.env.MONGO_CONNECTION_STRING || localString);
 

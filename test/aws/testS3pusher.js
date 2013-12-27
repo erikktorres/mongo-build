@@ -15,7 +15,7 @@ describe('s3pusher.js', function(){
 
   describe("", function(){
     var runTest = function(config) {
-      var pusher = s3Pusher(s3, config);
+      var pusher = s3Pusher(s3, config, function(){ return require('moment')(0).add('hour', 13).utc();});
       sinon.stub(s3, 'putObject');
       var myFn = function(){};
       pusher.push('test.file', myFn);
@@ -24,7 +24,7 @@ describe('s3pusher.js', function(){
       expect(s3.putObject).have.been.calledWith(
         {
           Bucket: 'testBucket',
-          Key: 'a/prefix/test.file',
+          Key: 'a/prefix/y=1970/m=01/d=01/H=13/M=00/test.file',
           Body: 'test.file',
           ACL: 'private',
           ServerSideEncryption: 'AES256'
@@ -66,7 +66,7 @@ describe('s3pusher.js', function(){
         bucket: 'testBucket',
         keyPrefix: '//////'
       };
-      var pusher = s3Pusher(s3, config);
+      var pusher = s3Pusher(s3, config, function(){ return require('moment')(0).add('hour', 13).utc();});
       sinon.stub(s3, 'putObject');
       var myFn = function(){};
       pusher.push('test.file', myFn);
@@ -75,7 +75,7 @@ describe('s3pusher.js', function(){
       expect(s3.putObject).have.been.calledWith(
         {
           Bucket: 'testBucket',
-          Key: 'test.file',
+          Key: 'y=1970/m=01/d=01/H=13/M=00/test.file',
           Body: 'test.file',
           ACL: 'private',
           ServerSideEncryption: 'AES256'
