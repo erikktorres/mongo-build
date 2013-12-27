@@ -1,3 +1,5 @@
+var util = require('util');
+
 var fn = require('./lib/common/fn.js');
 var pre = require('./lib/common/pre.js');
 
@@ -5,16 +7,28 @@ module.exports = (function(){
   var env = {};
 
   env.mongo = {};
+
+  // dbpath property to pass to Mongo
   env.mongo.dbPath = fn.returns(process.env.MONGO_DB_PATH || null);
+
+  // Location of config file for various mongo config settings
   env.mongo.configFile = fn.returns(process.env.MONGO_CONFIG_FILE || 'config/config.conf');
+
+  // The replication set name if this is a replication set
+  env.mongo.replSet = fn.returns(process.env.MONGO_REPLICATION_SET || null);
+
+  // Connection string to connect to the local mongo.
+  // This should rarely need to be set, as it should build it automatically.
+  var localString = 'mongo://localhost:27017/?ssl=true';
+  if (env.mongo.replSet() != null) {
+    localString = util.format('%s&replSet=%s', localString, env.mongo.replSet());
+  }
+  env.mongo.connectionString = fn.returns(process.env.MONGO_CONNECTION_STRING || localString);
 
   env.backup = {};
 
   // How often to run a backup
   env.backup.period = fn.returns(process.env.BACKUP_PERIOD || 'day');
-
-  // Boolean if this is a backup of a replica set
-  env.backup.replSet = fn.returns(process.env.BACKUP_REPLICATION_SET || false);
 
   // The local directory to put the backup in
   env.backup.storage = fn.returns(process.env.BACKUP_STORAGE || null);
