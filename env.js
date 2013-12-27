@@ -19,7 +19,7 @@ module.exports = (function(){
 
   // Connection string to connect to the local mongo.
   // This should rarely need to be set, as it should build it automatically.
-  var localString = 'mongo://localhost:27017/?ssl=true';
+  var localString = 'mongodb://localhost:27017/?ssl=true';
   if (env.mongo.replSet() != null) {
     localString = util.format('%s&replSet=%s', localString, env.mongo.replSet());
   }
