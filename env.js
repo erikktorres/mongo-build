@@ -18,7 +18,7 @@ module.exports = (function(){
   var mongoConfig = env.mongo.config();
   var localString = 'mongodb://localhost:27017/?';
   if (mongoConfig.replSet != null) {
-    localString = util.format('%s&replSet=%s', localString, env.mongo.replSet());
+    localString = util.format('%s&replSet=%s', localString, env.mongo.replSet);
   }
   if (mongoConfig.sslOnNormalPorts != null) {
     localString = util.format('%s&ssl=true', localString);

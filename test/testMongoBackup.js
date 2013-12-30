@@ -13,7 +13,7 @@ describe('mongoBackup.js', function(){
   var config = makeConfig({
     storage: 'testDir',
     period: 'minute',
-    mongodumpCmdArgs: '--ssl',
+    mongodumpCmdArgs: ['--ssl'],
     id: 'yay'
   });
 
@@ -40,9 +40,9 @@ describe('mongoBackup.js', function(){
 
 
     mockableObject.reset(polling);
-    sinon.stub(mongoClient, 'dump').withArgs('--ssl', 'testDir', sinon.match.func).callsArg(2);
-    sinon.stub(fileUtils, 'buildTar').withArgs('testDir', 'testDir/mongo-backup.tar.gz', sinon.match.func).callsArg(2);
-    sinon.stub(pusher, 'push').withArgs('testDir/mongo-backup.tar.gz').callsArg(1);
+    sinon.stub(mongoClient, 'dump').callsArg(2);
+    sinon.stub(fileUtils, 'buildTar').callsArg(2);
+    sinon.stub(pusher, 'push').callsArg(1);
     sinon.stub(fileUtils, 'deleteDir').withArgs('testDir');
 
     // Mock the mongo db
@@ -56,9 +56,12 @@ describe('mongoBackup.js', function(){
     backupFn(function(err){
       expect(err).to.not.exist;
       expect(mongoClient.dump).have.been.calledOnce;
+      expect(mongoClient.dump).have.been.calledWith(['--ssl'], 'testDir/mongo-backup', sinon.match.func);
       expect(mongoClient.connect).have.been.calledOnce;
       expect(fileUtils.buildTar).have.been.calledOnce;
+      expect(fileUtils.buildTar).have.been.calledWith('testDir/mongo-backup', 'testDir/mongo-backup.tar.gz', sinon.match.func);
       expect(pusher.push).have.been.calledOnce;
+      expect(pusher.push).have.been.calledWith('testDir/mongo-backup.tar.gz', sinon.match.func);
       expect(fileUtils.deleteDir).have.been.calledOnce;
       expect(db.close).have.been.calledOnce;
       done();
