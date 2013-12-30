@@ -21,7 +21,7 @@ module.exports = (function(){
     localString = util.format('%s&replSet=%s', localString, env.mongo.replSet());
   }
   if (mongoConfig.sslOnNormalPorts != null) {
-    localString = util.format('%s&ssl=%s', localString, env.mongo.replSet());
+    localString = util.format('%s&ssl=true', localString);
   }
   env.mongo.connectionString = fn.returns(process.env.MONGO_CONNECTION_STRING || localString);
 
